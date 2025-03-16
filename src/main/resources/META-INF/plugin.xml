@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<idea-plugin>
+    <id>com.github.cassandra.plugin</id>
+    <name>Cassandra CQL Support</name>
+    <vendor>Siras</vendor>
+    <description><![CDATA[
+        Provides Apache Cassandra CQL support for IntelliJ IDEA Community Edition.
+        Features include:
+        - CQL syntax highlighting
+        - Code completion for CQL keywords and identifiers
+        - Basic query execution capabilities
+        - Schema navigation
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <resource-bundle>messages.CassandraBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Notification Group -->
+        <notificationGroup id="Cassandra CQL" displayType="BALLOON" />
+
+        <!-- File type factory for .cql files -->
+        <fileType
+                name="CQL File"
+                implementationClass="com.github.cassandra.CqlFileType"
+                fieldName="INSTANCE"
+                language="CQL"
+                extensions="cql"/>
+        
+        <!-- Language support -->
+        <lang.parserDefinition
+                language="CQL"
+                implementationClass="com.github.cassandra.lang.CqlParserDefinition"/>
+        
+        <!-- Syntax highlighter -->
+        <lang.syntaxHighlighterFactory
+                language="CQL"
+                implementationClass="com.github.cassandra.highlighting.CqlSyntaxHighlighterFactory"/>
+        
+        <!-- Code completion -->
+        <completion.contributor
+                language="CQL"
+                implementationClass="com.github.cassandra.completion.CqlCompletionContributor"/>
+        
+        <!-- Tool window for Cassandra connection and query execution -->
+        <toolWindow
+                id="Cassandra"
+                anchor="right"
+                icon="icons/cassandra.svg"
+                factoryClass="com.github.cassandra.toolwindow.CassandraToolWindowFactory"
+                secondary="false"
+                canCloseContents="false"/>
+
+        <!-- Persistent settings -->
+        <applicationService
+                serviceImplementation="com.github.cassandra.settings.CassandraSettingsState"/>
+    </extensions>
+
+    <actions>
+        <!-- Add actions here -->
+        <action id="Cassandra.ExecuteQuery"
+                class="com.github.cassandra.actions.ExecuteQueryAction"
+                text="Execute CQL Query"
+                description="Execute the current CQL query">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift ENTER"/>
+        </action>
+    </actions>
+</idea-plugin> 
